@@ -1,6 +1,8 @@
 # EncryptAttr
 
 [![Build Status](https://travis-ci.org/fnando/encrypt_attr.svg)](https://travis-ci.org/fnando/encrypt_attr)
+[![Code Climate](https://codeclimate.com/github/fnando/encrypt_attr/badges/gpa.svg)](https://codeclimate.com/github/fnando/encrypt_attr)
+[![Test Coverage](https://codeclimate.com/github/fnando/encrypt_attr/badges/coverage.svg)](https://codeclimate.com/github/fnando/encrypt_attr)
 
 Encrypt attributes using AES-256-CBC (or your custom encryption algorithm). Works with and without ActiveRecord.
 
