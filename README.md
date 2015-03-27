@@ -44,7 +44,7 @@ The `encrypt_attr` method has some aliases, so you can also use any of these:
 - `encrypted_attr`
 - `encrypted_attribute`
 
-This assumes that you have a `encrypted_api_key` attribute. By default, the value is encrypted using a global secret token. You can set a custom token by setting `EncryptAttr.secret_token`; you have that use 100 characters or more (e.g. `$ openssl rand -hex 50`).
+This assumes that you have a `encrypted_api_key` attribute. By default, the value is encrypted using a global secret token. You can set a custom token by setting `EncryptAttr.secret_token`; you have to use 100 characters or more (e.g. `$ openssl rand -hex 50`).
 
 ```ruby
 EncryptAttr.secret_token = 'abc123'
