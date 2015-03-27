@@ -1,0 +1,18 @@
+require 'bundler/setup'
+require 'active_record'
+require 'encrypt_attr'
+require 'minitest/spec'
+require 'minitest/autorun'
+require 'minitest/reporters'
+
+Minitest::Reporters.use!
+
+ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: ':memory:'
+
+ActiveRecord::Schema.define(version: 0) do
+  create_table :users do |t|
+    t.text :encrypted_api_key
+  end
+end
+
+EncryptAttr.secret_token = SecureRandom.hex(50)
