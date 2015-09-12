@@ -56,7 +56,7 @@ You can also set the secret token per attribute basis.
 class User
   include EncryptAttr
   attr_accessor :encrypted_api_key
-  encrypt_attr :api_key, secret: USER_SECRET_TOKEN
+  encrypt_attr :api_key, secret_token: USER_SECRET_TOKEN
 end
 ```
 
