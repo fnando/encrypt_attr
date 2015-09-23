@@ -5,7 +5,7 @@ Gem::Specification.new do |spec|
   spec.version       = EncryptAttr::VERSION
   spec.authors       = ['Nando Vieira']
   spec.email         = ['fnando.vieira@gmail.com']
-  spec.summary       = 'Encrypt attributes using AES-256-CBC (or your custom encryption algorithm). Works with and without ActiveRecord.'
+  spec.summary       = 'Encrypt attributes using AES-256-CBC (or your custom encryption strategy). Works with and without ActiveRecord.'
   spec.description   = spec.summary
   spec.homepage      = 'http://rubygems.org/gems/encrypt_attr'
   spec.license       = 'MIT'
