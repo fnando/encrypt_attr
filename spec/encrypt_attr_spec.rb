@@ -55,6 +55,9 @@ describe EncryptAttr do
       instance = klass.new(api_key: 'API_KEY')
       instance.api_key = 'API_KEY'
       instance.encrypted_api_key.must_equal(encrypted_api_key)
+
+      instance = klass.new(encrypted_api_key: encrypted_api_key)
+      instance.api_key.must_equal 'API_KEY'
     end
   end
 
@@ -163,6 +166,19 @@ describe EncryptAttr do
     instance.api_key = nil
     instance.api_key.must_be_nil
     instance.encrypted_api_key.must_be_nil
+  end
+
+  it 'uses custom encryptor' do
+    klass = create_class do
+      attr_accessor :encrypted_email
+      encrypt_attr :email, encryptor: MD5Encryptor
+    end
+
+    instance = klass.new(email: 'john@example.com')
+    instance.encrypted_email.must_equal 'd4c74594d841139328695756648b6bd6'
+
+    instance = klass.new(encrypted_email: 'd4c74594d841139328695756648b6bd6')
+    instance.email.must_equal 'd4c74594d841139328695756648b6bd6'
   end
 
   def create_class(&block)

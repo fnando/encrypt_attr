@@ -5,9 +5,9 @@ require 'active_record'
 require 'encrypt_attr'
 require 'minitest/spec'
 require 'minitest/autorun'
-require 'minitest/reporters'
+require 'minitest/utils'
 
-Minitest::Reporters.use!
+require_relative './support/md5_encryptor'
 
 ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: ':memory:'
 

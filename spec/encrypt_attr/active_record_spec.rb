@@ -16,7 +16,7 @@ describe EncryptAttr, 'ActiveRecord support' do
                           .encrypt(EncryptAttr.secret_token, 'API_KEY')
 
     instance = model.create(api_key: 'API_KEY')
-    instance.reload
+    instance = model.last
 
     instance.encrypted_api_key.must_equal(encrypted_api_key)
     instance.api_key.must_equal('API_KEY')

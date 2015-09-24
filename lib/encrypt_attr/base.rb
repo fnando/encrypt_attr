@@ -36,11 +36,11 @@ module EncryptAttr
     self.encryptor = Encryptor
 
     module ClassMethods
-      def encrypt_attr(*args, secret_token: EncryptAttr.secret_token)
+      def encrypt_attr(*args, secret_token: EncryptAttr.secret_token, encryptor: EncryptAttr.encryptor)
         EncryptAttr.validate_secret_token(secret_token)
 
         args.each do |attribute|
-          define_encrypted_attribute(attribute, secret_token)
+          define_encrypted_attribute(attribute, secret_token, encryptor)
         end
       end
       alias_method :attr_encrypt, :encrypt_attr
@@ -53,15 +53,18 @@ module EncryptAttr
 
       private
 
-      def define_encrypted_attribute(attribute, secret_token)
+      def define_encrypted_attribute(attribute, secret_token, encryptor)
         define_method attribute do
-          instance_variable_get("@#{attribute}")
+          value = instance_variable_get("@#{attribute}")
+          encrypted_value = send("encrypted_#{attribute}") unless value
+          value = encryptor.decrypt(secret_token, encrypted_value) if encrypted_value
+          instance_variable_set("@#{attribute}", value)
         end
 
         define_method "#{attribute}=" do |value|
           instance_variable_set("@#{attribute}", value)
           send("encrypted_#{attribute}=", nil)
-          send("encrypted_#{attribute}=", EncryptAttr.encryptor.encrypt(secret_token, value)) if value
+          send("encrypted_#{attribute}=", encryptor.encrypt(secret_token, value)) if value
         end
       end
     end

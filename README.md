@@ -131,6 +131,16 @@ user.api_key = 'API_KEY'
 user.encrypted_api_key #=> 'YEK_IPA'
 ```
 
+You can also specify a custom encryptor per attribute.
+
+```ruby
+class User
+  include EncryptAttr
+  attr_accessor :encrypted_api_key
+  attr_encrypted :api_key, encryptor: ReverseEncryptor
+end
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
