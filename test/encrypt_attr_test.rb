@@ -1,7 +1,11 @@
 require 'minitest_helper'
 
-describe EncryptAttr do
-  it 'warns about short secret token (global)' do
+class EncryptAttrTest < Minitest::Test
+  setup do
+    EncryptAttr.secret_token = SecureRandom.hex(50)
+  end
+
+  test 'warns about short secret token (global)' do
     line_number = __LINE__ + 3
 
     out, err = capture_io do
@@ -13,10 +17,10 @@ describe EncryptAttr do
       "(called from #{__FILE__}:%d)"
     ].join(' ')
 
-    err.must_include(expected_message % line_number)
+    assert_includes err, expected_message % line_number
   end
 
-  it 'warns about short secret token (attribute)' do
+  test 'warns about short secret token (attribute)' do
     line_number = __LINE__ + 5
 
     out, err = capture_io do
@@ -31,7 +35,7 @@ describe EncryptAttr do
       "(called from #{__FILE__}:%d)"
     ].join(' ')
 
-    err.must_include(expected_message % line_number)
+    assert_includes err, expected_message % line_number
   end
 
   %w[
@@ -42,7 +46,7 @@ describe EncryptAttr do
     encrypted_attr
     encrypted_attribute
   ].each do |encryption_method|
-    it "encrypts attribute using alias method - #{encryption_method}" do
+    test "encrypts attribute using alias method - #{encryption_method}" do
       EncryptAttr.secret_token = SecureRandom.hex(50)
       encrypted_api_key = EncryptAttr::Encryptor
                           .encrypt(EncryptAttr.secret_token, 'API_KEY')
@@ -54,14 +58,15 @@ describe EncryptAttr do
 
       instance = klass.new(api_key: 'API_KEY')
       instance.api_key = 'API_KEY'
-      instance.encrypted_api_key.must_equal(encrypted_api_key)
+
+      assert_equal encrypted_api_key, instance.encrypted_api_key
 
       instance = klass.new(encrypted_api_key: encrypted_api_key)
-      instance.api_key.must_equal 'API_KEY'
+      assert_equal 'API_KEY', instance.api_key
     end
   end
 
-  it 'encrypts one attribute using default secret token' do
+  test 'encrypts one attribute using default secret token' do
     EncryptAttr.secret_token = SecureRandom.hex(50)
     encrypted_api_key = EncryptAttr::Encryptor
                         .encrypt(EncryptAttr.secret_token, 'API_KEY')
@@ -73,12 +78,12 @@ describe EncryptAttr do
 
     instance = klass.new(api_key: 'API_KEY')
 
-    instance.api_key.must_equal('API_KEY')
-    instance.encrypted_api_key.wont_be_nil
-    instance.encrypted_api_key.must_equal(encrypted_api_key)
+    assert_equal 'API_KEY', instance.api_key
+    refute_nil instance.encrypted_api_key
+    assert_equal encrypted_api_key, instance.encrypted_api_key
   end
 
-  it 'encrypts one attribute using custom secret token' do
+  test 'encrypts one attribute using custom secret token' do
     EncryptAttr.secret_token = SecureRandom.hex(50)
     custom_secret_token = SecureRandom.hex(50)
     encrypted_api_key = EncryptAttr::Encryptor
@@ -91,10 +96,10 @@ describe EncryptAttr do
 
     instance = klass.new(api_key: 'API_KEY')
 
-    instance.encrypted_api_key.must_equal(encrypted_api_key)
+    assert_equal encrypted_api_key, instance.encrypted_api_key
   end
 
-  it 'encrypts multiple attributes using default secret token' do
+  test 'encrypts multiple attributes using default secret token' do
     EncryptAttr.secret_token = SecureRandom.hex(50)
     encrypted_api_key = EncryptAttr::Encryptor
                         .encrypt(EncryptAttr.secret_token, 'API_KEY')
@@ -109,14 +114,14 @@ describe EncryptAttr do
 
     instance = klass.new(api_key: 'API_KEY', api_client_id: 'API_CLIENT_ID')
 
-    instance.api_key.must_equal('API_KEY')
-    instance.api_client_id.must_equal('API_CLIENT_ID')
+    assert_equal 'API_KEY', instance.api_key
+    assert_equal 'API_CLIENT_ID', instance.api_client_id
 
-    instance.encrypted_api_key.must_equal(encrypted_api_key)
-    instance.encrypted_api_client_id.must_equal(encrypted_api_client_id)
+    assert_equal encrypted_api_key, instance.encrypted_api_key
+    assert_equal encrypted_api_client_id, instance.encrypted_api_client_id
   end
 
-  it 'encrypts multiple attributes using custom secret token' do
+  test 'encrypts multiple attributes using custom secret token' do
     EncryptAttr.secret_token = SecureRandom.hex(50)
     custom_secret_token = SecureRandom.hex(50)
     encrypted_api_key = EncryptAttr::Encryptor
@@ -132,11 +137,11 @@ describe EncryptAttr do
 
     instance = klass.new(api_key: 'API_KEY', api_client_id: 'API_CLIENT_ID')
 
-    instance.encrypted_api_key.must_equal(encrypted_api_key)
-    instance.encrypted_api_client_id.must_equal(encrypted_api_client_id)
+    assert_equal encrypted_api_key, instance.encrypted_api_key
+    assert_equal encrypted_api_client_id, instance.encrypted_api_client_id
   end
 
-  it 'updates encrypted value' do
+  test 'updates encrypted value' do
     EncryptAttr.secret_token = SecureRandom.hex(50)
 
     klass = create_class do
@@ -149,14 +154,11 @@ describe EncryptAttr do
 
     instance.api_key = 'NEW_API_KEY'
 
-    instance.api_key.must_equal('NEW_API_KEY')
-
-    EncryptAttr::Encryptor.decrypt(
-      EncryptAttr.secret_token, instance.encrypted_api_key
-    ).must_equal('NEW_API_KEY')
+    assert_equal 'NEW_API_KEY', instance.api_key
+    assert_equal 'NEW_API_KEY', EncryptAttr::Encryptor.decrypt(EncryptAttr.secret_token, instance.encrypted_api_key)
   end
 
-  it 'skips nil values' do
+  test 'skips nil values' do
     klass = create_class do
       attr_accessor :encrypted_api_key
       encrypt_attr :api_key
@@ -164,21 +166,22 @@ describe EncryptAttr do
 
     instance = klass.new(api_key: 'API_KEY')
     instance.api_key = nil
-    instance.api_key.must_be_nil
-    instance.encrypted_api_key.must_be_nil
+
+    assert_nil instance.api_key
+    assert_nil instance.encrypted_api_key
   end
 
-  it 'uses custom encryptor' do
+  test 'uses custom encryptor' do
     klass = create_class do
       attr_accessor :encrypted_email
       encrypt_attr :email, encryptor: MD5Encryptor
     end
 
     instance = klass.new(email: 'john@example.com')
-    instance.encrypted_email.must_equal 'd4c74594d841139328695756648b6bd6'
+    assert_equal 'd4c74594d841139328695756648b6bd6', instance.encrypted_email
 
     instance = klass.new(encrypted_email: 'd4c74594d841139328695756648b6bd6')
-    instance.email.must_equal 'd4c74594d841139328695756648b6bd6'
+    assert_equal 'd4c74594d841139328695756648b6bd6', instance.email
   end
 
   def create_class(&block)

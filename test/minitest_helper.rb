@@ -3,7 +3,6 @@ CodeClimate::TestReporter.start
 require 'bundler/setup'
 require 'active_record'
 require 'encrypt_attr'
-require 'minitest/spec'
 require 'minitest/autorun'
 require 'minitest/utils'
 
