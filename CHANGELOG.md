@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## v0.2.0
 
 - Allow custom encryptor per attribute.
 
