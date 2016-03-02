@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.2.1 [unreleased]
+## v0.2.1
 
 - Ignore empty strings; OpenSSL::Cipher raises exception with it.
 
