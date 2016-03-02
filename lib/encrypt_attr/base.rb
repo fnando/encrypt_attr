@@ -64,7 +64,7 @@ module EncryptAttr
         define_method "#{attribute}=" do |value|
           instance_variable_set("@#{attribute}", value)
           send("encrypted_#{attribute}=", nil)
-          send("encrypted_#{attribute}=", encryptor.encrypt(secret_token, value)) if value
+          send("encrypted_#{attribute}=", encryptor.encrypt(secret_token, value)) if value && value != ""
         end
       end
     end

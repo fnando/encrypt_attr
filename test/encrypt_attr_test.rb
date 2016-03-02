@@ -158,17 +158,19 @@ class EncryptAttrTest < Minitest::Test
     assert_equal 'NEW_API_KEY', EncryptAttr::Encryptor.decrypt(EncryptAttr.secret_token, instance.encrypted_api_key)
   end
 
-  test 'skips nil values' do
-    klass = create_class do
-      attr_accessor :encrypted_api_key
-      encrypt_attr :api_key
+  [nil, ""].each do |value|
+    test "skips value (#{value.inspect})" do
+      klass = create_class do
+        attr_accessor :encrypted_api_key
+        encrypt_attr :api_key
+      end
+
+      instance = klass.new(api_key: 'API_KEY')
+      instance.api_key = value
+
+      assert_same value, instance.api_key
+      assert_nil instance.encrypted_api_key
     end
-
-    instance = klass.new(api_key: 'API_KEY')
-    instance.api_key = nil
-
-    assert_nil instance.api_key
-    assert_nil instance.encrypted_api_key
   end
 
   test 'uses custom encryptor' do
