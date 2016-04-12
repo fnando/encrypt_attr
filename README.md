@@ -1,8 +1,10 @@
 # EncryptAttr
 
-[![Build Status](https://travis-ci.org/fnando/encrypt_attr.svg)](https://travis-ci.org/fnando/encrypt_attr)
+[![Travis-CI](https://travis-ci.org/fnando/encrypt_attr.png)](https://travis-ci.org/fnando/encrypt_attr)
 [![Code Climate](https://codeclimate.com/github/fnando/encrypt_attr/badges/gpa.svg)](https://codeclimate.com/github/fnando/encrypt_attr)
-[![Test Coverage](https://codeclimate.com/github/fnando/encrypt_attr/badges/coverage.svg)](https://codeclimate.com/github/fnando/encrypt_attr)
+[![Test Coverage](https://codeclimate.com/github/fnando/encrypt_attr/badges/coverage.svg)](https://codeclimate.com/github/fnando/encrypt_attr/coverage)
+[![Gem](https://img.shields.io/gem/v/encrypt_attr.svg)](https://rubygems.org/gems/encrypt_attr)
+[![Gem](https://img.shields.io/gem/dt/encrypt_attr.svg)](https://rubygems.org/gems/encrypt_attr)
 
 Encrypt attributes using AES-256-CBC (or your custom encryption strategy). Works with and without ActiveRecord.
 
@@ -11,7 +13,7 @@ Encrypt attributes using AES-256-CBC (or your custom encryption strategy). Works
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'encrypt_attr'
+gem "encrypt_attr"
 ```
 
 And then execute:
@@ -47,7 +49,7 @@ The `encrypt_attr` method has some aliases, so you can also use any of these:
 This assumes that you have a `encrypted_api_key` attribute. By default, the value is encrypted using a global secret token. You can set a custom token by setting `EncryptAttr.secret_token`; you have to use 100 characters or more (e.g. `$ openssl rand -hex 50`).
 
 ```ruby
-EncryptAttr.secret_token = 'abc123'
+EncryptAttr.secret_token = "abc123"
 ```
 
 You can also set the secret token per attribute basis.
@@ -64,11 +66,11 @@ To access the decrypted value, just use the method with the same name.
 
 ```ruby
 user = User.new
-user.api_key = 'abc123'
+user.api_key = "abc123"
 user.api_key                #=> abc123
 user.encrypted_api_key      #=> UcnhbnAl1Rmvt1mkG0m1FA...
 
-user.api_key = 'newsecret'
+user.api_key = "newsecret"
 user.api_key                #=> newsecret
 user.encrypted_api_key      #=> JgH5dFGl8HnJNEloXZ6qSg...
 ```
@@ -127,7 +129,7 @@ class User
 end
 
 user = User.new
-user.api_key = 'API_KEY'
+user.api_key = "API_KEY"
 user.encrypted_api_key #=> 'YEK_IPA'
 ```
 

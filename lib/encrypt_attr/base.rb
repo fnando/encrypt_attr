@@ -22,7 +22,7 @@ module EncryptAttr
     def self.validate_secret_token(secret_token)
       if secret_token.size < 100
         offending_line = caller
-                          .reject {|entry| entry.include?(__dir__) || entry.include?('forwardable.rb') }
+                          .reject {|entry| entry.include?(__dir__) || entry.include?("forwardable.rb") }
                           .first[/^(.*?:\d+)/, 1]
         warn "[encrypt_attribute] secret token must have at least 100 characters (called from #{offending_line})"
       end

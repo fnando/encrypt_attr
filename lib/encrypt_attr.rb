@@ -1,10 +1,10 @@
-require 'forwardable'
+require "forwardable"
 
 module EncryptAttr
-  require 'encrypt_attr/version'
-  require 'encrypt_attr/encryptor'
-  require 'encrypt_attr/base'
-  require 'encrypt_attr/active_record' if defined?(ActiveRecord)
+  require "encrypt_attr/version"
+  require "encrypt_attr/encryptor"
+  require "encrypt_attr/base"
+  require "encrypt_attr/active_record" if defined?(ActiveRecord)
 
   class << self
     extend Forwardable

@@ -1,4 +1,4 @@
-require 'digest/md5'
+require "digest/md5"
 
 class MD5Encryptor
   def self.encrypt(_, value)

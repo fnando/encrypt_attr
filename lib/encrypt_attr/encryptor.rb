@@ -28,7 +28,7 @@ module EncryptAttr
     end
 
     def cipher(mode, value)
-      cipher = OpenSSL::Cipher.new('AES-256-CBC').public_send(mode)
+      cipher = OpenSSL::Cipher.new("AES-256-CBC").public_send(mode)
       cipher.key = Digest::SHA256.digest(secret_token)
       cipher.iv = Digest::SHA256.digest(secret_token)
       cipher.update(value) + cipher.final
