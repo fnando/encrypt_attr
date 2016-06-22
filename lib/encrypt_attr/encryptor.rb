@@ -1,9 +1,7 @@
-require "digest/sha2"
-require "base64"
-require "openssl"
-
 module EncryptAttr
   class Encryptor
+    CIPHER = "AES-256-CBC".freeze
+
     def self.encrypt(secret_token, value)
       new(secret_token).encrypt(value)
     end
@@ -28,9 +26,10 @@ module EncryptAttr
     end
 
     def cipher(mode, value)
-      cipher = OpenSSL::Cipher.new("AES-256-CBC").public_send(mode)
-      cipher.key = Digest::SHA256.digest(secret_token)
-      cipher.iv = Digest::SHA256.digest(secret_token)
+      cipher = OpenSSL::Cipher.new(CIPHER).public_send(mode)
+      digest = Digest::SHA256.digest(secret_token)
+      cipher.key = digest
+      cipher.iv = digest[0...cipher.iv_len]
       cipher.update(value) + cipher.final
     end
 

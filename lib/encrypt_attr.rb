@@ -1,4 +1,7 @@
 require "forwardable"
+require "digest/sha2"
+require "base64"
+require "openssl"
 
 module EncryptAttr
   require "encrypt_attr/version"

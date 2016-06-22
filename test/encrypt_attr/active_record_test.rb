@@ -12,11 +12,13 @@ class EncryptAttrActiveRecordTest < Minitest::Test
       encrypt_attr :api_key
     }
 
+    model.delete_all
+
     encrypted_api_key = EncryptAttr::Encryptor
                           .encrypt(EncryptAttr.secret_token, "API_KEY")
 
-    instance = model.create(api_key: "API_KEY")
-    instance = model.last
+    instance = model.create!(api_key: "API_KEY")
+    instance = model.all.to_a.first #=> required due to an error with arel and ruby-2.4
 
     assert_equal encrypted_api_key, instance.encrypted_api_key
     assert_equal "API_KEY", instance.api_key
