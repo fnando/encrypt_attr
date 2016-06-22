@@ -1,6 +1,6 @@
-require 'digest/sha2'
-require 'base64'
-require 'openssl'
+require "digest/sha2"
+require "base64"
+require "openssl"
 
 module EncryptAttr
   class Encryptor
