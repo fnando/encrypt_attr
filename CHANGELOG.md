@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## v0.2.2
 
 - Ruby 2.4+ validates the IV and key size, so now we're setting the exact size. Notice that encrypted values will be the same, since ruby ignored the additional characters.
 
