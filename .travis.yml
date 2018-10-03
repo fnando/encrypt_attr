@@ -4,11 +4,13 @@ sudo: false
 notifications:
   email: false
 rvm:
-  - '2.3.1'
-  - '2.2'
-  - '2.1'
-  - '2.0'
-addons:
-  code_climate:
-    repo_token:
-      secure: "4vr2TYLMkquEL3/7mnnmE9diuQ98ug3iNw3eXB69JCC5OIW8DGRlL20/44+dh6xEImkkvp6bKQQrikvYTMpqrDi4MeAYFHzAWw2p7Oc+A5bGERamByTakM0wyl9ypnwHGzpleBoHShk7TP/Dpl6w25ME1QPb67qF8uPeeIQJQzE="
+- 2.5.1
+before_script:
+- curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+- chmod +x ./cc-test-reporter
+- "./cc-test-reporter before-build"
+after_script:
+- "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
+env:
+  global:
+    secure: Qr1hys7KWk6pxd9Vgxuged9iDIEw/UbHPpED4PhI3HLY/cCJF2k3Sr5zGnW4LHfWA3olmI1AlFsCuojul44V+tvb5pNAe7ZnzJp23ikhEFBjBvoJCnYrD01wD96sSD3m5bnT4+I6SEeHdMJwAvqM6bNXQaMJwJLyZHdAYK9DQnY=
