@@ -17,5 +17,3 @@ ActiveRecord::Schema.define(version: 0) do
     t.text :encrypted_api_key
   end
 end
-
-EncryptAttr.secret_token = SecureRandom.hex(50)

@@ -28,18 +28,33 @@ module EncryptAttr
     end
 
     def encrypt(value)
-      encode cipher(:encrypt, value)
+      cipher = OpenSSL::Cipher.new(CIPHER).encrypt
+      key = Digest::SHA256.digest(secret_token)
+      iv = SecureRandom.random_bytes(cipher.iv_len).unpack("H*").first[0...cipher.iv_len]
+
+      cipher.key = key
+      cipher.iv = iv
+
+      iv + ";" + encode(cipher.update(value) + cipher.final)
     end
 
     def decrypt(value)
-      cipher(:decrypt, decode(value))
-    end
+      cipher = OpenSSL::Cipher.new(CIPHER).decrypt
+      key = Digest::SHA256.digest(secret_token)
 
-    def cipher(mode, value)
-      cipher = OpenSSL::Cipher.new(CIPHER).public_send(mode)
-      digest = Digest::SHA256.digest(secret_token)
-      cipher.key = digest
-      cipher.iv = digest[0...cipher.iv_len]
+      parts = value.split(";")
+
+      if parts.size == 1
+        value = decode(value)
+        iv = key[0...cipher.iv_len]
+      else
+        iv = parts.first
+        value = decode(parts.last)
+      end
+
+      cipher.key = key
+      cipher.iv = iv
+
       cipher.update(value) + cipher.final
     end
 
