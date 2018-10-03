@@ -143,6 +143,24 @@ class User
 end
 ```
 
+Your encryptor may validate the secret token.
+
+```ruby
+module ReverseEncryptor
+  def self.validate_secret_token(secret_token)
+    warn "=> You don't have to define a secret token with ReverseEncryptor" if secret_token
+  end
+
+  def self.encrypt(secret_token, value)
+    value.to_s.reverse
+  end
+
+  def self.decrypt(secret_token, value)
+    value.to_s.reverse
+  end
+end
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.

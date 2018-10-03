@@ -2,6 +2,16 @@ module EncryptAttr
   class Encryptor
     CIPHER = "AES-256-CBC".freeze
 
+    def self.validate_secret_token(secret_token)
+      return unless secret_token.size < 100
+
+      offending_line = caller
+                        .reject {|entry| entry.include?(__dir__) || entry.include?("forwardable.rb") }
+                        .first[/^(.*?:\d+)/, 1]
+
+      warn "[encrypt_attribute] secret token must have at least 100 characters (called from #{offending_line})"
+    end
+
     def self.encrypt(secret_token, value)
       new(secret_token).encrypt(value)
     end

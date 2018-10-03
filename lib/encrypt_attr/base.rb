@@ -15,29 +15,20 @@ module EncryptAttr
     end
 
     def self.secret_token=(secret_token)
-      validate_secret_token(secret_token.to_s)
+      encryptor.validate_secret_token(secret_token.to_s) if encryptor.respond_to?(:validate_secret_token)
       @secret_token = secret_token.to_s
-    end
-
-    def self.validate_secret_token(secret_token)
-      if secret_token.size < 100
-        offending_line = caller
-                          .reject {|entry| entry.include?(__dir__) || entry.include?("forwardable.rb") }
-                          .first[/^(.*?:\d+)/, 1]
-        warn "[encrypt_attribute] secret token must have at least 100 characters (called from #{offending_line})"
-      end
     end
 
     # Set initial token value to empty string.
     # Cannot assign through writer method because of size warning.
-    @secret_token = ''
+    @secret_token = ""
 
     # Set initial encryptor engine.
     self.encryptor = Encryptor
 
     module ClassMethods
       def encrypt_attr(*args, secret_token: EncryptAttr.secret_token, encryptor: EncryptAttr.encryptor)
-        EncryptAttr.validate_secret_token(secret_token)
+        encryptor.validate_secret_token(secret_token) if encryptor.respond_to?(:validate_secret_token)
 
         args.each do |attribute|
           define_encrypted_attribute(attribute, secret_token, encryptor)
